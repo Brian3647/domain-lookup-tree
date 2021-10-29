@@ -76,7 +76,7 @@ impl DomainLookupTree {
     }
 
     pub fn insert(&mut self, domain: &str) {
-        let is_wildcard = domain.starts_with(".");
+        let is_wildcard = domain.starts_with('.');
         let segments = domain_to_rseg(domain);
         let n_segments = segments.len();
 
@@ -137,14 +137,16 @@ impl DomainLookupTree {
             }
         }
 
-        if let Some(m) = wildcard_match {
-            Some((fqdn, m))
-        } else {
-            None
-        }
+        wildcard_match.map(|m| (fqdn, m))
+    }
+}
+
+impl Default for DomainLookupTree {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
 fn domain_to_rseg(domain: &str) -> Vec<&str> {
-    domain.rsplit(".").collect::<Vec<&str>>()
+    domain.rsplit('.').collect::<Vec<&str>>()
 }
