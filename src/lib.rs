@@ -68,6 +68,14 @@ impl Node {
 }
 
 impl DomainLookupTree {
+    /// Returns a new instance of a DomainLookupTree
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use domain_lookup_tree::DomainLookupTree;
+    /// let mut tree = DomainLookupTree::new();
+    /// ```
     pub fn new() -> DomainLookupTree {
         DomainLookupTree {
             nodes: Default::default(),
@@ -75,6 +83,20 @@ impl DomainLookupTree {
         }
     }
 
+    /// Inserts a domain into the DomainLookupTree.
+    ///
+    /// # Arguments
+    ///
+    /// * `domain` - The domain to be inserted into the DLT. Denote as a wildcard by adding a leading dot (.)
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use domain_lookup_tree::DomainLookupTree;
+    ///
+    /// let mut tree = DomainLookupTree::new();
+    /// tree.insert(".google.com");
+    /// ```
     pub fn insert(&mut self, domain: &str) {
         let is_wildcard = domain.starts_with('.');
         let segments = domain_to_rseg(domain);
@@ -94,6 +116,22 @@ impl DomainLookupTree {
         }
     }
 
+    /// Looks up a domain in the tree, returns an Option with the matched string including wildcard prefix
+    /// if applicable
+    ///
+    /// # Arguments
+    ///
+    /// * `domain` - The domain to look up in the tree
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use domain_lookup_tree::DomainLookupTree;
+    ///
+    /// let mut tree = DomainLookupTree::new();
+    /// tree.insert(".google.com");
+    /// assert_eq!(tree.lookup("www.google.com"), Some(".google.com".to_string()))
+    /// ```
     pub fn lookup(&self, domain: &str) -> Option<String> {
         match self.traverse(domain) {
             None => None,
